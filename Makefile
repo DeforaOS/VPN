@@ -1,6 +1,6 @@
 PACKAGE	= VPN
 VERSION	= 0.0.0
-SUBDIRS	= include src tools
+SUBDIRS	= data include src tools
 RM	?= rm -f
 LN	?= ln -f
 TAR	?= tar -czvf
@@ -21,10 +21,11 @@ dist:
 	$(RM) -r -- $(PACKAGE)-$(VERSION)
 	$(LN) -s -- . $(PACKAGE)-$(VERSION)
 	@$(TAR) $(PACKAGE)-$(VERSION).tar.gz -- \
-		$(PACKAGE)-$(VERSION)/include/VPN.h \
+		$(PACKAGE)-$(VERSION)/data/Makefile \
+		$(PACKAGE)-$(VERSION)/data/VPN.interface \
+		$(PACKAGE)-$(VERSION)/data/appbroker.sh \
+		$(PACKAGE)-$(VERSION)/data/project.conf \
 		$(PACKAGE)-$(VERSION)/include/Makefile \
-		$(PACKAGE)-$(VERSION)/include/VPN.interface \
-		$(PACKAGE)-$(VERSION)/include/appbroker.sh \
 		$(PACKAGE)-$(VERSION)/include/project.conf \
 		$(PACKAGE)-$(VERSION)/src/vpn.c \
 		$(PACKAGE)-$(VERSION)/src/main.c \

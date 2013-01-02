@@ -1,6 +1,6 @@
 #!/bin/sh
 #$Id$
-#Copyright (c) 2011 Pierre Pronchery <khorben@defora.org>
+#Copyright (c) 2011-2013 Pierre Pronchery <khorben@defora.org>
 #All rights reserved.
 #
 #Redistribution and use in source and binary forms, with or without
@@ -52,5 +52,7 @@ if [ $# -ne 1 ]; then
 	exit $?
 fi
 
-APPINTERFACE="${1%%.h}.interface"
+APPINTERFACE="$1"
+APPINTERFACE="${APPINTERFACE##*/}"
+APPINTERFACE="../data/${APPINTERFACE%%.h}.interface"
 AppBroker -o "$1" "$APPINTERFACE"
