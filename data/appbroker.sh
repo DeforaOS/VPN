@@ -40,8 +40,12 @@ _usage()
 
 
 #main
-while getopts P: name; do
+clean=0
+while getopts "cP:" name; do
 	case "$name" in
+		c)
+			clean=1
+			;;
 		P)
 			#we can ignore it
 			;;
@@ -56,6 +60,8 @@ if [ $# -ne 1 ]; then
 	_usage
 	exit $?
 fi
+
+[ "$clean" -ne 0 ] && exit 0
 
 APPINTERFACE="$1"
 APPINTERFACE="${APPINTERFACE##*/}"
