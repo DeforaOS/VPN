@@ -2,20 +2,20 @@ TARGETS	= libVPN.so
 PREFIX	= /usr/local
 DESTDIR	=
 LIBDIR	= $(PREFIX)/lib
-CC	?= cc
-CPPFLAGSF?=
+CC	= cc
+CPPFLAGSF=
 CPPFLAGS= -I $(PREFIX)/include
 CFLAGSF	= -W -fPIC `pkg-config --cflags libApp`
 CFLAGS	= -Wall -g -O2 -pedantic
 LDFLAGSF= `pkg-config --libs libApp`
 LDFLAGS	= 
-AR	?= ar
-RANLIB	?= ranlib
-CCSHARED?= $(CC) -shared
-RM	?= rm -f
-LN	?= ln -f
-MKDIR	?= mkdir -p
-INSTALL	?= install
+AR	= ar
+RANLIB	= ranlib
+CCSHARED= $(CC) -shared
+RM	= rm -f
+LN	= ln -f
+MKDIR	= mkdir -p
+INSTALL	= install
 
 
 all: $(TARGETS)
