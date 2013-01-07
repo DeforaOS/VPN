@@ -14,6 +14,7 @@ VPN.h: ../data/VPN.interface
 
 clean:
 	$(RM) -- $(VPN.h_OBJS)
+	../data/appbroker.sh -c -P "$(PREFIX)" -- "VPN.h"
 
 distclean: clean
 	$(RM) -- $(TARGETS)
