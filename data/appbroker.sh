@@ -25,6 +25,11 @@
 
 
 
+#variables
+#executables
+APPBROKER="AppBroker"
+
+
 #functions
 #usage
 _usage()
@@ -55,4 +60,4 @@ fi
 APPINTERFACE="$1"
 APPINTERFACE="${APPINTERFACE##*/}"
 APPINTERFACE="../data/${APPINTERFACE%%.h}.interface"
-AppBroker -o "$1" "$APPINTERFACE"
+$APPBROKER -o "$1" "$APPINTERFACE"
