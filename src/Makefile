@@ -12,7 +12,7 @@ LDFLAGSF= `pkg-config --libs libApp` -Wl,--export-dynamic
 LDFLAGS	= 
 RM	= rm -f
 LN	= ln -f
-MKDIR	= mkdir -p
+MKDIR	= mkdir -m 0755 -p
 INSTALL	= install
 
 
