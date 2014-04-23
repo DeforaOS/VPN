@@ -37,10 +37,10 @@ distclean: clean
 	$(RM) -- $(TARGETS)
 
 install: $(TARGETS)
-	$(MKDIR) $(DESTDIR)$(PREFIX)/lib/AppWrapper
-	$(INSTALL) -m 0644 libVPN.so $(DESTDIR)$(PREFIX)/lib/AppWrapper/libVPN.so
+	$(MKDIR) $(DESTDIR)$(LIBDIR)/AppWrapper
+	$(INSTALL) -m 0644 libVPN.so $(DESTDIR)$(LIBDIR)/AppWrapper/libVPN.so
 
 uninstall:
-	$(RM) -- $(DESTDIR)$(PREFIX)/lib/AppWrapper/libVPN.so
+	$(RM) -- $(DESTDIR)$(LIBDIR)/AppWrapper/libVPN.so
 
 .PHONY: all clean distclean install uninstall
