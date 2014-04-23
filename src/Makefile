@@ -42,7 +42,7 @@ distclean: clean
 
 install: $(TARGETS)
 	$(MKDIR) $(DESTDIR)$(BINDIR)
-	$(INSTALL) -m 0755 -- VPN $(DESTDIR)$(BINDIR)/VPN
+	$(INSTALL) -m 0755 VPN $(DESTDIR)$(BINDIR)/VPN
 
 uninstall:
 	$(RM) -- $(DESTDIR)$(BINDIR)/VPN

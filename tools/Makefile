@@ -38,7 +38,7 @@ distclean: clean
 
 install: $(TARGETS)
 	$(MKDIR) $(DESTDIR)$(PREFIX)/lib/AppWrapper
-	$(INSTALL) -m 0644 -- libVPN.so $(DESTDIR)$(PREFIX)/lib/AppWrapper/libVPN.so
+	$(INSTALL) -m 0644 libVPN.so $(DESTDIR)$(PREFIX)/lib/AppWrapper/libVPN.so
 
 uninstall:
 	$(RM) -- $(DESTDIR)$(PREFIX)/lib/AppWrapper/libVPN.so
