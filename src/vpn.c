@@ -118,7 +118,7 @@ int32_t VPN_connect(AppServerClient * asc, uint32_t protocol,
 	switch(vprotocol)
 	{
 		case VP_IP_TCP:
-			sdomain = PF_INET;
+			sdomain = AF_INET;
 			stype = SOCK_STREAM;
 			sa_in.sin_family = AF_INET;
 			/* FIXME parse uri to initialize sa_in */
