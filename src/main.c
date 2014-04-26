@@ -1,5 +1,5 @@
 /* $Id$ */
-/* Copyright (c) 2010 Pierre Pronchery <khorben@defora.org> */
+/* Copyright (c) 2010-2014 Pierre Pronchery <khorben@defora.org> */
 /* This file is part of DeforaOS System VPN */
 /* This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 /* usage */
 static int _usage(void)
 {
-	fputs("Usage: " PACKAGE " [-L|-R]\n", stderr);
+	fputs("Usage: " PACKAGE " [-R]\n", stderr);
 	return 1;
 }
 
@@ -33,16 +33,13 @@ static int _usage(void)
 int main(int argc, char * argv[])
 {
 	int o;
-	AppServerOptions options = ASO_LOCAL;
+	AppServerOptions options = 0;
 
-	while((o = getopt(argc, argv, "LR")) != -1)
+	while((o = getopt(argc, argv, "R")) != -1)
 		switch(o)
 		{
-			case 'L':
-				options = ASO_LOCAL;
-				break;
 			case 'R':
-				options = ASO_REMOTE;
+				options |= ASO_REGISTER;
 				break;
 			default:
 				return _usage();

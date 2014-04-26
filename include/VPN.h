@@ -6,7 +6,7 @@
 # define VPN_VPN_H
 
 # include <stdint.h>
-# include <System.h>
+# include <System/App.h>
 
 
 /* types */
@@ -48,9 +48,9 @@ typedef String ** STRING_INOUT;
 
 
 /* calls */
-INT32 VPN_close(INT32 fd);
-INT32 VPN_connect(UINT32 protocol, STRING name);
-INT32 VPN_recv(INT32 fd, BUFFER_IN buf, UINT32 size, UINT32 flags);
-INT32 VPN_send(INT32 fd, BUFFER_OUT buf, UINT32 size, UINT32 flags);
+INT32 VPN_close(AppServerClient * client, INT32 fd);
+INT32 VPN_connect(AppServerClient * client, UINT32 protocol, STRING name);
+INT32 VPN_recv(AppServerClient * client, INT32 fd, BUFFER_IN buf, UINT32 size, UINT32 flags);
+INT32 VPN_send(AppServerClient * client, INT32 fd, BUFFER_OUT buf, UINT32 size, UINT32 flags);
 
 #endif /* !VPN_VPN_H */

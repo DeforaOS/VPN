@@ -1,6 +1,5 @@
 #$Id$
 service=VPN
-port=4246
 
 [constants]
 #protocols

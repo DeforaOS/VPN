@@ -1,5 +1,5 @@
 /* $Id$ */
-/* Copyright (c) 2011 Pierre Pronchery <khorben@defora.org> */
+/* Copyright (c) 2011-2014 Pierre Pronchery <khorben@defora.org> */
 /* This file is part of DeforaOS System VPN */
 /* This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,7 +76,7 @@ static void _libvpn_init(void)
 		exit(1);
 	}
 	dlclose(hdl);
-	if((_appclient = appclient_new("VPN")) == NULL)
+	if((_appclient = appclient_new("VPN", NULL)) == NULL)
 	{
 		error_print(PROGNAME);
 		exit(1);
@@ -94,7 +94,8 @@ int connect(int fd, const struct sockaddr * name, socklen_t namelen)
 	_libvpn_init();
 	if(fd < VPN_OFFSET)
 		return old_connect(fd, name, namelen);
-	if(appclient_call(_appclient, &ret, "connect", fd - VPN_OFFSET) != 0)
+	if(appclient_call(_appclient, (void **)&ret, "connect", fd - VPN_OFFSET)
+			!= 0)
 		return -1;
 #ifdef DEBUG
 	fprintf(stderr, "DEBUG: connect(%d) => %d\n", fd - VFS_OFFSET, ret);

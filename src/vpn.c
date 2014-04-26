@@ -1,5 +1,5 @@
 /* $Id$ */
-/* Copyright (c) 2010-2012 Pierre Pronchery <khorben@defora.org> */
+/* Copyright (c) 2010-2014 Pierre Pronchery <khorben@defora.org> */
 /* This file is part of DeforaOS System VPN */
 /* This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@
 /* types */
 typedef struct _VPNClient
 {
-	void * id;
+	AppServerClient * id;
 	int32_t * sockets;
 	size_t sockets_cnt;
 } VPNClient;
@@ -56,12 +56,12 @@ static void _client_init(void);
 static void _client_destroy(void);
 
 /* accessors */
-static VPNClient * _client_get(void);
-static VPNClient * _client_check(VPNClient * client, int32_t fd);
+static VPNClient * _client_get(AppServerClient * asc);
+static VPNClient * _client_check(AppServerClient * asc, int32_t fd);
 
 /* useful */
-static VPNClient * _client_add(VPNClient * client);
-static VPNClient * _client_add_socket(VPNClient * client, int32_t fd);
+static VPNClient * _client_add(AppServerClient * asc);
+static VPNClient * _client_add_socket(AppServerClient * asc, int32_t fd);
 static VPNClient * _client_remove_socket(VPNClient * client, int32_t fd);
 
 
@@ -70,7 +70,7 @@ static VPNClient * _client_remove_socket(VPNClient * client, int32_t fd);
 /* vpn */
 int vpn(AppServerOptions options)
 {
-	if((_appserver = appserver_new("VPN", options)) == NULL)
+	if((_appserver = appserver_new(options, "VPN", NULL)) == NULL)
 	{
 		error_print(PACKAGE);
 		return 1;
@@ -85,24 +85,26 @@ int vpn(AppServerOptions options)
 
 /* interface */
 /* VPN_close */
-int32_t VPN_close(int32_t fd)
+int32_t VPN_close(AppServerClient * asc, int32_t fd)
 {
 	VPNClient * client;
 	int32_t ret;
 
-	if((client = _client_check(NULL, fd)) == NULL)
+	if((client = _client_check(asc, fd)) == NULL)
 		return -1;
 #ifdef DEBUG
 	fprintf(stderr, "DEBUG: %s(%d)\n", __func__, fd);
 #endif
 	if((ret = close(fd)) == 0)
+		/* XXX ignore errors */
 		_client_remove_socket(client, fd);
 	return ret;
 }
 
 
 /* VPN_connect */
-int32_t VPN_connect(uint32_t protocol, String const * uri)
+int32_t VPN_connect(AppServerClient * asc, uint32_t protocol,
+		String const * uri)
 {
 	int32_t ret;
 	VPNProtocol vprotocol = protocol;
@@ -131,7 +133,7 @@ int32_t VPN_connect(uint32_t protocol, String const * uri)
 	if((ret = socket(sdomain, stype, sprotocol)) == -1)
 		return -1;
 	if(connect(ret, sockaddr, ssize) != 0
-			|| _client_add_socket(NULL, ret) == NULL)
+			|| _client_add_socket(asc, ret) != 0)
 	{
 		close(ret); /* XXX necessary when connect() failed? */
 		return -1;
@@ -141,11 +143,12 @@ int32_t VPN_connect(uint32_t protocol, String const * uri)
 
 
 /* VPN_recv */
-int32_t VPN_recv(int32_t fd, Buffer * buffer, uint32_t size, uint32_t flags)
+int32_t VPN_recv(AppServerClient * asc, int32_t fd, Buffer * buffer,
+		uint32_t size, uint32_t flags)
 {
 	int32_t ret;
 
-	if(_client_check(NULL, fd) == NULL)
+	if(_client_check(asc, fd) == NULL)
 		return -1;
 #ifdef DEBUG
 	fprintf(stderr, "DEBUG: %s(%d, buf, %u, %u)\n", __func__, fd, size,
@@ -169,9 +172,10 @@ int32_t VPN_recv(int32_t fd, Buffer * buffer, uint32_t size, uint32_t flags)
 
 
 /* VPN_send */
-int32_t VPN_send(int32_t fd, Buffer * buffer, uint32_t size, uint32_t flags)
+int32_t VPN_send(AppServerClient * asc, int32_t fd, Buffer * buffer,
+		uint32_t size, uint32_t flags)
 {
-	if(_client_check(NULL, fd) == NULL)
+	if(_client_check(asc, fd) == NULL)
 		return -1;
 #ifdef DEBUG
 	fprintf(stderr, "DEBUG: %s(%d, buf, %u, %u)\n", __func__, fd, size,
@@ -206,29 +210,24 @@ static void _client_destroy(void)
 
 /* accessors */
 /* client_get */
-static VPNClient * _client_get(void)
+static VPNClient * _client_get(AppServerClient * client)
 {
-	void * id;
 	size_t i;
 
-	if((id = appserver_get_client_id(_appserver)) == NULL)
-	{
-		error_print(PACKAGE);
-		return NULL;
-	}
 	for(i = 0; i < _clients_cnt; i++)
-		if(_clients[i].id == id)
+		if(_clients[i].id == client)
 			return &_clients[i];
 	return NULL;
 }
 
 
 /* client_check */
-static VPNClient * _client_check(VPNClient * client, int32_t fd)
+static VPNClient * _client_check(AppServerClient * asc, int32_t fd)
 {
+	VPNClient * client;
 	size_t i;
 
-	if(client == NULL && (client = _client_get()) == NULL)
+	if((client = _client_get(asc)) == NULL)
 		return NULL;
 #ifdef DEBUG
 	fprintf(stderr, "DEBUG: %s(%d)\n", __func__, fd);
@@ -242,18 +241,12 @@ static VPNClient * _client_check(VPNClient * client, int32_t fd)
 
 /* useful */
 /* client_add */
-static VPNClient * _client_add(VPNClient * client)
+static VPNClient * _client_add(AppServerClient * asc)
 {
-	void * id;
 	VPNClient * p;
 
-	if(client == NULL && (client = _client_get()) != NULL)
-		return client;
-	if((id = appserver_get_client_id(_appserver)) == NULL)
-	{
-		error_print(PACKAGE);
-		return NULL;
-	}
+	if((p = _client_get(asc)) != NULL)
+		return p;
 	if((p = realloc(_clients, sizeof(*p) * (_clients_cnt + 1))) == NULL)
 	{
 		error_set_print(PACKAGE, 1, "%s", strerror(errno));
@@ -261,7 +254,7 @@ static VPNClient * _client_add(VPNClient * client)
 	}
 	_clients = p;
 	p = &_clients[_clients_cnt++];
-	p->id = id;
+	p->id = asc;
 	p->sockets = NULL;
 	p->sockets_cnt = 0;
 	return p;
@@ -269,11 +262,12 @@ static VPNClient * _client_add(VPNClient * client)
 
 
 /* client_add_socket */
-static VPNClient * _client_add_socket(VPNClient * client, int32_t fd)
+static VPNClient * _client_add_socket(AppServerClient * asc, int32_t fd)
 {
+	VPNClient * client;
 	int32_t * p;
 
-	if((client = _client_add(client)) == NULL)
+	if((client = _client_add(asc)) == NULL)
 		return NULL;
 	if((p = realloc(client->sockets, sizeof(*p)
 					* (client->sockets_cnt + 1))) == NULL)
@@ -298,8 +292,6 @@ static VPNClient * _client_remove_socket(VPNClient * client, int32_t fd)
 		error_set_print(PACKAGE, 1, "%s", strerror(EINVAL));
 		return NULL;
 	}
-	if(client == NULL && (client = _client_get()) == NULL)
-		return NULL;
 	for(i = 0; i < client->sockets_cnt; i++)
 		if(client->sockets[i] == fd)
 			break;
