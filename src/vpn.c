@@ -70,7 +70,7 @@ static VPNClient * _client_remove_socket(VPNClient * client, int32_t fd);
 /* vpn */
 int vpn(AppServerOptions options)
 {
-	if((_appserver = appserver_new(options, "VPN", NULL)) == NULL)
+	if((_appserver = appserver_new(NULL, options, "VPN", NULL)) == NULL)
 	{
 		error_print(PACKAGE);
 		return 1;
@@ -85,7 +85,7 @@ int vpn(AppServerOptions options)
 
 /* interface */
 /* VPN_close */
-int32_t VPN_close(AppServerClient * asc, int32_t fd)
+int32_t VPN_close(App * app, AppServerClient * asc, int32_t fd)
 {
 	VPNClient * client;
 	int32_t ret;
@@ -103,7 +103,7 @@ int32_t VPN_close(AppServerClient * asc, int32_t fd)
 
 
 /* VPN_connect */
-int32_t VPN_connect(AppServerClient * asc, uint32_t protocol,
+int32_t VPN_connect(App * app, AppServerClient * asc, uint32_t protocol,
 		String const * uri)
 {
 	int32_t ret;
@@ -143,7 +143,7 @@ int32_t VPN_connect(AppServerClient * asc, uint32_t protocol,
 
 
 /* VPN_recv */
-int32_t VPN_recv(AppServerClient * asc, int32_t fd, Buffer * buffer,
+int32_t VPN_recv(App * app, AppServerClient * asc, int32_t fd, Buffer * buffer,
 		uint32_t size, uint32_t flags)
 {
 	int32_t ret;
@@ -172,7 +172,7 @@ int32_t VPN_recv(AppServerClient * asc, int32_t fd, Buffer * buffer,
 
 
 /* VPN_send */
-int32_t VPN_send(AppServerClient * asc, int32_t fd, Buffer * buffer,
+int32_t VPN_send(App * app, AppServerClient * asc, int32_t fd, Buffer * buffer,
 		uint32_t size, uint32_t flags)
 {
 	if(_client_check(asc, fd) == NULL)

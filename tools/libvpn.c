@@ -76,7 +76,7 @@ static void _libvpn_init(void)
 		exit(1);
 	}
 	dlclose(hdl);
-	if((_appclient = appclient_new("VPN", NULL)) == NULL)
+	if((_appclient = appclient_new(NULL, "VPN", NULL)) == NULL)
 	{
 		error_print(PROGNAME);
 		exit(1);

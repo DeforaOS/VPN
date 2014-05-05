@@ -48,9 +48,9 @@ typedef String ** STRING_INOUT;
 
 
 /* calls */
-INT32 VPN_close(AppServerClient * client, INT32 fd);
-INT32 VPN_connect(AppServerClient * client, UINT32 protocol, STRING name);
-INT32 VPN_recv(AppServerClient * client, INT32 fd, BUFFER_IN buf, UINT32 size, UINT32 flags);
-INT32 VPN_send(AppServerClient * client, INT32 fd, BUFFER_OUT buf, UINT32 size, UINT32 flags);
+INT32 VPN_close(App * app, AppServerClient * client, INT32 fd);
+INT32 VPN_connect(App * app, AppServerClient * client, UINT32 protocol, STRING name);
+INT32 VPN_recv(App * app, AppServerClient * client, INT32 fd, BUFFER_IN buf, UINT32 size, UINT32 flags);
+INT32 VPN_send(App * app, AppServerClient * client, INT32 fd, BUFFER_OUT buf, UINT32 size, UINT32 flags);
 
 #endif /* !VPN_VPN_H */
