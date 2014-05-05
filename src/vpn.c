@@ -45,7 +45,6 @@ typedef enum _VPNProtocol
 
 
 /* variables */
-static AppServer * _appserver;
 static VPNClient * _clients;
 static size_t _clients_cnt;
 
@@ -70,15 +69,17 @@ static VPNClient * _client_remove_socket(VPNClient * client, int32_t fd);
 /* vpn */
 int vpn(AppServerOptions options)
 {
-	if((_appserver = appserver_new(NULL, options, "VPN", NULL)) == NULL)
+	AppServer * appserver;
+
+	if((appserver = appserver_new(NULL, options, "VPN", NULL)) == NULL)
 	{
 		error_print(PACKAGE);
 		return 1;
 	}
 	_client_init();
-	appserver_loop(_appserver);
+	appserver_loop(appserver);
 	_client_destroy();
-	appserver_delete(_appserver);
+	appserver_delete(appserver);
 	return 0;
 }
 
