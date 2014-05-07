@@ -28,7 +28,8 @@
 /* usage */
 static int _usage(void)
 {
-	fputs("Usage: " PROGNAME " [-R]\n", stderr);
+	fputs("Usage: " PROGNAME " [-R]\n"
+"  -R   Register the service with the Session\n", stderr);
 	return 1;
 }
 
