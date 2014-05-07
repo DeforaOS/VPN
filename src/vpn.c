@@ -28,6 +28,10 @@
 #include "vpn.h"
 #include "../config.h"
 
+#ifndef PROGNAME
+# define PROGNAME PACKAGE
+#endif
+
 
 /* VPN */
 /* private */
@@ -74,7 +78,7 @@ int vpn(AppServerOptions options)
 
 	if((appserver = appserver_new(NULL, options, "VPN", NULL)) == NULL)
 	{
-		error_print(PACKAGE);
+		error_print(PROGNAME);
 		return 1;
 	}
 	_client_init();
@@ -251,7 +255,7 @@ static VPNClient * _client_add(AppServerClient * asc)
 		return p;
 	if((p = realloc(_clients, sizeof(*p) * (_clients_cnt + 1))) == NULL)
 	{
-		error_set_print(PACKAGE, 1, "%s", strerror(errno));
+		error_set_print(PROGNAME, 1, "%s", strerror(errno));
 		return NULL;
 	}
 	_clients = p;
@@ -274,7 +278,7 @@ static VPNClient * _client_add_socket(AppServerClient * asc, int32_t fd)
 	if((p = realloc(client->sockets, sizeof(*p)
 					* (client->sockets_cnt + 1))) == NULL)
 	{
-		error_set_print(PACKAGE, 1, "%s", strerror(errno));
+		error_set_print(PROGNAME, 1, "%s", strerror(errno));
 		return NULL;
 	}
 	client->sockets = p;
@@ -291,7 +295,7 @@ static VPNClient * _client_remove_socket(VPNClient * client, int32_t fd)
 
 	if(fd < 0) /* XXX should never happen */
 	{
-		error_set_print(PACKAGE, 1, "%s", strerror(EINVAL));
+		error_set_print(PROGNAME, 1, "%s", strerror(EINVAL));
 		return NULL;
 	}
 	for(i = 0; i < client->sockets_cnt; i++)

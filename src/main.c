@@ -20,11 +20,15 @@
 #include "vpn.h"
 #include "../config.h"
 
+#ifndef PROGNAME
+# define PROGNAME PACKAGE
+#endif
+
 
 /* usage */
 static int _usage(void)
 {
-	fputs("Usage: " PACKAGE " [-R]\n", stderr);
+	fputs("Usage: " PROGNAME " [-R]\n", stderr);
 	return 1;
 }
 
