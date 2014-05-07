@@ -126,7 +126,7 @@ int32_t VPN_connect(App * app, AppServerClient * asc, uint32_t protocol,
 			/* FIXME parse uri to initialize sa_in */
 			sa_in.sin_addr.s_addr = htonl(0x7f000001);
 			sa_in.sin_port = htons(80);
-			sockaddr = (struct sockaddr*)&sa_in;
+			sockaddr = (struct sockaddr *)&sa_in;
 			ssize = sizeof(sa_in);
 			break;
 		default:
