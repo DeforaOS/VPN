@@ -15,6 +15,7 @@
 
 
 
+#include <sys/resource.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
@@ -36,11 +37,12 @@ typedef struct _VPNSocket
 
 /* constants */
 #define PROGNAME	"libVPN"
-#define VPN_OFFSET	1024
 
 
 /* variables */
 static AppClient * _appclient = NULL;
+
+static int _vpn_offset = 1024;
 
 /* local functions */
 static int (*old_connect)(int fd, const struct sockaddr * name,
@@ -58,6 +60,9 @@ static void _libvpn_init(void)
 	/* FIXME some symbols may be in libsocket.so instead */
 	static char * libc[] = { "/lib/libc.so", "/lib/libc.so.6" };
 	size_t i;
+#ifdef RLIMIT_NOFILE
+	struct rlimit r;
+#endif
 
 	if(hdl != NULL)
 		return;
@@ -81,6 +86,13 @@ static void _libvpn_init(void)
 		error_print(PROGNAME);
 		exit(1);
 	}
+#ifdef RLIMIT_NOFILE
+	if(getrlimit(RLIMIT_NOFILE, &r) == 0 && r.rlim_max > _vpn_offset)
+		_vpn_offset = r.rlim_max;
+# ifdef DEBUG
+	fprintf(stderr, "DEBUG: %s() %u\n", __func__, _vpn_offset);
+# endif
+#endif
 }
 
 
@@ -92,9 +104,10 @@ int connect(int fd, const struct sockaddr * name, socklen_t namelen)
 	int ret;
 
 	_libvpn_init();
-	if(fd < VPN_OFFSET)
+	if(fd < _vpn_offset)
 		return old_connect(fd, name, namelen);
-	if(appclient_call(_appclient, (void **)&ret, "connect", fd - VPN_OFFSET)
+	if(appclient_call(_appclient, (void **)&ret, "connect",
+				fd - _vpn_offset)
 			!= 0)
 		return -1;
 #ifdef DEBUG
