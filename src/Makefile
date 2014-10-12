@@ -36,6 +36,7 @@ main.o: main.c
 
 clean:
 	$(RM) -- $(../include/VPN.h_OBJS) $(VPN_OBJS)
+	../data/appbroker.sh -c -P "$(PREFIX)" -- "../include/VPN.h"
 
 distclean: clean
 	$(RM) -- $(TARGETS)
