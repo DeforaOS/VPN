@@ -1,4 +1,5 @@
-TARGETS	= VPN.h
+TARGETS	= $(OBJDIR)VPN.h
+OBJDIR	=
 PREFIX	= /usr/local
 DESTDIR	=
 RM	= rm -f
@@ -9,8 +10,8 @@ INSTALL	= install
 
 all: $(TARGETS)
 
-VPN.h: ../data/VPN.interface
-	../data/appbroker.sh -P "$(PREFIX)" -- "VPN.h"
+$(OBJDIR)VPN.h: ../data/VPN.interface
+	../data/appbroker.sh -P "$(PREFIX)" -- "$(OBJDIR)VPN.h"
 
 clean:
 	$(RM) -- $(VPN.h_OBJS)

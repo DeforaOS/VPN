@@ -1,4 +1,5 @@
-TARGETS	= libVPN.so
+TARGETS	= $(OBJDIR)libVPN.so
+OBJDIR	=
 PREFIX	= /usr/local
 DESTDIR	=
 LIBDIR	= $(PREFIX)/lib
@@ -20,15 +21,15 @@ INSTALL	= install
 
 all: $(TARGETS)
 
-libVPN_OBJS = libvpn.o
+libVPN_OBJS = $(OBJDIR)libvpn.o
 libVPN_CFLAGS = $(CPPFLAGSF) $(CPPFLAGS) $(CFLAGSF) $(CFLAGS)
 libVPN_LDFLAGS = $(LDFLAGSF) $(LDFLAGS)
 
-libVPN.so: $(libVPN_OBJS)
-	$(CCSHARED) -o libVPN.so $(libVPN_OBJS) $(libVPN_LDFLAGS)
+$(OBJDIR)libVPN.so: $(libVPN_OBJS)
+	$(CCSHARED) -o $(OBJDIR)libVPN.so $(libVPN_OBJS) $(libVPN_LDFLAGS)
 
-libvpn.o: libvpn.c ../include/VPN.h ../src/common.c
-	$(CC) $(libVPN_CFLAGS) -c libvpn.c
+$(OBJDIR)libvpn.o: libvpn.c ../include/VPN.h ../src/common.c
+	$(CC) $(libVPN_CFLAGS) -o $(OBJDIR)libvpn.o -c libvpn.c
 
 clean:
 	$(RM) -- $(libVPN_OBJS)
@@ -38,7 +39,7 @@ distclean: clean
 
 install: $(TARGETS)
 	$(MKDIR) $(DESTDIR)$(LIBDIR)/AppWrapper
-	$(INSTALL) -m 0644 libVPN.so $(DESTDIR)$(LIBDIR)/AppWrapper/libVPN.so
+	$(INSTALL) -m 0755 $(OBJDIR)libVPN.so $(DESTDIR)$(LIBDIR)/AppWrapper/libVPN.so
 
 uninstall:
 	$(RM) -- $(DESTDIR)$(LIBDIR)/AppWrapper/libVPN.so

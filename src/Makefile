@@ -1,4 +1,5 @@
-TARGETS	= ../include/VPN.h VPN
+TARGETS	= $(OBJDIR)../include/VPN.h $(OBJDIR)VPN
+OBJDIR	=
 PREFIX	= /usr/local
 DESTDIR	=
 BINDIR	= $(PREFIX)/bin
@@ -18,21 +19,21 @@ INSTALL	= install
 
 all: $(TARGETS)
 
-../include/VPN.h: ../data/VPN.interface
-	../data/appbroker.sh -P "$(PREFIX)" -- "../include/VPN.h"
+$(OBJDIR)../include/VPN.h: ../data/VPN.interface
+	../data/appbroker.sh -P "$(PREFIX)" -- "$(OBJDIR)../include/VPN.h"
 
-VPN_OBJS = vpn.o main.o
+VPN_OBJS = $(OBJDIR)vpn.o $(OBJDIR)main.o
 VPN_CFLAGS = $(CPPFLAGSF) $(CPPFLAGS) $(CFLAGSF) $(CFLAGS)
 VPN_LDFLAGS = $(LDFLAGSF) $(LDFLAGS)
 
-VPN: $(VPN_OBJS)
-	$(CC) -o VPN $(VPN_OBJS) $(VPN_LDFLAGS)
+$(OBJDIR)VPN: $(VPN_OBJS)
+	$(CC) -o $(OBJDIR)VPN $(VPN_OBJS) $(VPN_LDFLAGS)
 
-vpn.o: vpn.c ../include/VPN.h
-	$(CC) $(VPN_CFLAGS) -c vpn.c
+$(OBJDIR)vpn.o: vpn.c ../include/VPN.h
+	$(CC) $(VPN_CFLAGS) -o $(OBJDIR)vpn.o -c vpn.c
 
-main.o: main.c
-	$(CC) $(VPN_CFLAGS) -c main.c
+$(OBJDIR)main.o: main.c
+	$(CC) $(VPN_CFLAGS) -o $(OBJDIR)main.o -c main.c
 
 clean:
 	$(RM) -- $(../include/VPN.h_OBJS) $(VPN_OBJS)
@@ -43,7 +44,7 @@ distclean: clean
 
 install: $(TARGETS)
 	$(MKDIR) $(DESTDIR)$(BINDIR)
-	$(INSTALL) -m 0755 VPN $(DESTDIR)$(BINDIR)/VPN
+	$(INSTALL) -m 0755 $(OBJDIR)VPN $(DESTDIR)$(BINDIR)/VPN
 
 uninstall:
 	$(RM) -- $(DESTDIR)$(BINDIR)/VPN
