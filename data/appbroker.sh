@@ -62,7 +62,8 @@ fi
 
 [ "$clean" -ne 0 ] && exit 0
 
-APPINTERFACE="$1"
-APPINTERFACE="${APPINTERFACE##*/}"
+target="$1"
+source="${target#$OBJDIR}"
+APPINTERFACE="${source##*/}"
 APPINTERFACE="../data/${APPINTERFACE%%.h}.interface"
-$APPBROKER -o "$1" "$APPINTERFACE"
+$APPBROKER -o "$target" "$APPINTERFACE"
