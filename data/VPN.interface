@@ -26,14 +26,14 @@ arg2=INT32_OUT,address
 [call::recv]
 ret=INT32
 arg1=INT32,fd
-arg2=BUFFER_IN,buf
+arg2=BUFFER_OUT,buffer
 arg3=UINT32,size
 arg4=UINT32,flags
 
 [call::send]
 ret=INT32
 arg1=INT32,fd
-arg2=BUFFER_OUT,buf
+arg2=BUFFER_IN,buffer
 arg3=UINT32,size
 arg4=UINT32,flags
 
