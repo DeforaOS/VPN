@@ -15,7 +15,7 @@
 
 
 
-#include "../include/VPN.h"
+#include "VPN.h"
 
 
 /* types */
