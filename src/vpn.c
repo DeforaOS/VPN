@@ -178,8 +178,8 @@ int32_t VPN_recv(App * app, AppServerClient * asc, int32_t fd, Buffer * buffer,
 
 
 /* VPN_send */
-int32_t VPN_send(App * app, AppServerClient * asc, int32_t fd, Buffer * buffer,
-		uint32_t size, uint32_t flags)
+int32_t VPN_send(App * app, AppServerClient * asc, int32_t fd,
+		Buffer const * buffer, uint32_t size, uint32_t flags)
 {
 	if(_client_check(asc, fd) == NULL)
 		return -1;
