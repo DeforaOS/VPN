@@ -46,7 +46,7 @@ typedef struct _VPNAppClientFD
 
 /* constants */
 #define APPINTERFACE	"VPN"
-#define PROGNAME	"libVPN"
+#define PROGNAME	APPINTERFACE
 
 
 /* variables */
