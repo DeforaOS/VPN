@@ -15,6 +15,8 @@
 
 
 
+#include <sys/types.h>
+#include <errno.h>
 #include "VPN.h"
 
 
